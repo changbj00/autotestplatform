@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.autotestplatform.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.autotestplatform.entity.User">
+        <result column="id" property="id"/>
+        <result column="email" property="email"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="phone" property="phone"/>
+        <result column="department" property="department"/>
+        <result column="role" property="role"/>
+    </resultMap>
+
+    <select id="login" resultMap="BaseResultMap">
+        select
+        *
+        from user
+        where email=#{email} and password=#{password}
+    </select>
+    <select id="getUser" resultType="com.autotestplatform.entity.User">
+        select * from user where email=#{email}
+    </select>
+    <insert id="register" parameterType="com.autotestplatform.entity.User">
+        insert into user
+        (username,password,email,phone,department,role)
+        values
+        (#{username},#{password},#{email},#{phone},#{department},#{role})
+    </insert>
+    <update id="forgetPwd" parameterType="com.autotestplatform.entity.User">
+        update user
+        set password=#{pwd},email=#{email}
+        where
+        email=#{email}
+    </update>
+    <delete id="deleteUser" parameterType="java.lang.String">
+        delete from user where email=#{email}
+    </delete>
+</mapper>

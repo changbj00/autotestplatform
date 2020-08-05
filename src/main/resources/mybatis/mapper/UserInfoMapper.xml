@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.autotestplatform.mapper.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.autotestplatform.entity.UserInfo">
+        <result column="uid" property="uid"/>
+        <result column="role" property="role"/>
+        <result column="permisson" property="permission"/>
+        <result column="department" property="department"/>
+    </resultMap>
+    <sql id="Base_Column_List">uid,role,permission,department</sql>
+    <select id="getUserInfo" resultMap="BaseResultMap">
+        select *
+        from user_info
+        where uid=#{uid}
+    </select>
+</mapper>
