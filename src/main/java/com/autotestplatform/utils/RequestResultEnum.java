@@ -17,7 +17,10 @@ public enum  RequestResultEnum {
 
     //业务类返回码
     login(1001, "用户名或密码错误"),
-    register(1002,"用户已注册");
+    register(1002,"用户已注册"),
+    user(1003,"请检查用户信息是否全部填写"),
+    forgot(1004,"用户未注册"),
+    emailcode(1005,"验证码错误");
 
     private int code;
     private String msg;

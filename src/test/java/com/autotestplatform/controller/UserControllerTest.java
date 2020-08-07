@@ -2,6 +2,7 @@ package com.autotestplatform.controller;
 
 import com.autotestplatform.entity.User;
 import com.autotestplatform.service.UserService;
+import com.autotestplatform.utils.RestApiResult;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,10 @@ class UserControllerTest {
     @Test
     public void test(){
         User user=new User();
-        user.setEmail("baojie.chang@100credit.com");
+        user.setEmail("123@11.com");
         user.setPassword("111");
-        userController.registerUser(user);
+        RestApiResult apiResult=userController.login("123@11.com","");
+        System.out.println(apiResult.getMsg());
     }
 
 }

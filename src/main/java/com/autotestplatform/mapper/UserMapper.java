@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserMapper {
     User login(@Param("email") String email, @Param("password") String password);
+
     User getUser(@Param("email") String email);
+
     void register(User user);
 
     void forgetPwd(User user);

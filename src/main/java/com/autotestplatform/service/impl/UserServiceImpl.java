@@ -1,12 +1,12 @@
 package com.autotestplatform.service.impl;
 
 import com.autotestplatform.entity.User;
-import com.autotestplatform.entity.UserInfo;
-import com.autotestplatform.mapper.UserInfoMapper;
 import com.autotestplatform.mapper.UserMapper;
 import com.autotestplatform.service.UserService;
+import com.autotestplatform.utils.RedisKey;
 import com.autotestplatform.utils.RequestResultEnum;
 import com.autotestplatform.utils.RestApiResult;
+import com.autotestplatform.utils.SendEmail;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private UserInfoMapper userInfoMapper;
+    private SendEmail sendEmail;
+    @Autowired
+    private RestApiResult restApiResult;
+    @Autowired
+    private RedisKey redisKey;
 
     @Override
     public RestApiResult login(String email, String pwd) {
@@ -32,14 +36,12 @@ public class UserServiceImpl implements UserService {
                 log.info("email{},pwd{}", email, pwd);
                 restApiResult.setCode(RequestResultEnum.login.getCode());
                 restApiResult.setMsg(RequestResultEnum.login.getMsg());
-                //restApiResult.build(1001,"用户不存在");
                 restApiResult.setData(null);
             } else {
                 log.info("user{}", user);
                 restApiResult.setCode(RequestResultEnum.SUCCESS.getCode());
                 restApiResult.setMsg(RequestResultEnum.SUCCESS.getMsg());
                 restApiResult.setData(user);
-                //restApiResult.build(1000, "登陆成功", user);
             }
             return restApiResult;
         }
@@ -55,14 +57,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public RestApiResult register(User user) {
         RestApiResult restApiResult = new RestApiResult();
+        if (user.getEmail() == null || user.getPassword() == null || user.getDepartment() == null || user.getPhone() == null || user.getRole() == null || user.getUsername() == null) {
+            return restApiResult.build(RequestResultEnum.user.getCode(), RequestResultEnum.user.getMsg());
+        }
         if (user != null) {
             User existUser = getUser(user.getEmail());
             if (existUser != null) {
-                log.info("该用户存在{}",existUser);
+                log.info("该用户存在{}", existUser);
                 restApiResult.setCode(RequestResultEnum.SUCCESS.getCode());
                 restApiResult.setMsg(RequestResultEnum.register.getMsg());
             } else {
-                log.info("新用户{}",user);
+                log.info("新用户{}", user);
                 user.setId(null);
                 user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
                 userMapper.register(user);
@@ -76,9 +81,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean forgetPwd(User user, String code) {
-
-        return false;
+    public RestApiResult forgetPwd(User user, String code) {
+        try {
+            String email = user.getEmail();
+            if (user != null) {
+                User existUser = getUser(email);
+                if (existUser != null) {
+                    String getCode = redisKey.getKey(email);
+                    if (getCode.equals(code)) {
+                        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
+                        userMapper.forgetPwd(user);
+                        return restApiResult.success(user);
+                    }
+                    return restApiResult.build(RequestResultEnum.emailcode.getCode(), RequestResultEnum.emailcode.getMsg());
+                }
+                return restApiResult.build(RequestResultEnum.forgot.getCode(), RequestResultEnum.forgot.getMsg());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            //return restApiResult.faild();
+        }
+        return restApiResult.faild();
     }
 
     @Override

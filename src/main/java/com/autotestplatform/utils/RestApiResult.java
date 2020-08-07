@@ -1,5 +1,8 @@
 package com.autotestplatform.utils;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class RestApiResult<T> {
     //响应码
     private Integer code;
@@ -10,6 +13,13 @@ public class RestApiResult<T> {
 
     public static RestApiResult faild() {
         return new RestApiResult(RequestResultEnum.FAILD.getCode(), RequestResultEnum.FAILD.getMsg(), null);
+    }
+
+    public static RestApiResult success() {
+        return new RestApiResult(RequestResultEnum.FAILD.getCode(), RequestResultEnum.FAILD.getMsg(), null);
+    }
+    public RestApiResult success(T data) {
+        return new RestApiResult(RequestResultEnum.FAILD.getCode(), RequestResultEnum.FAILD.getMsg(), data);
     }
 
     public static RestApiResult build(Integer code, String msg) {
