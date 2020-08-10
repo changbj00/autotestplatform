@@ -28,7 +28,7 @@
     </insert>
     <update id="forgetPwd" parameterType="com.autotestplatform.entity.User">
         update user
-        set password=#{pwd},email=#{email}
+        set password=#{password},email=#{email}
         where
         email=#{email}
     </update>

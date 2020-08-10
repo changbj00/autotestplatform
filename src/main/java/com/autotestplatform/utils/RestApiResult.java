@@ -16,10 +16,10 @@ public class RestApiResult<T> {
     }
 
     public static RestApiResult success() {
-        return new RestApiResult(RequestResultEnum.FAILD.getCode(), RequestResultEnum.FAILD.getMsg(), null);
+        return new RestApiResult(RequestResultEnum.SUCCESS.getCode(), RequestResultEnum.SUCCESS.getMsg(), null);
     }
     public RestApiResult success(T data) {
-        return new RestApiResult(RequestResultEnum.FAILD.getCode(), RequestResultEnum.FAILD.getMsg(), data);
+        return new RestApiResult(RequestResultEnum.SUCCESS.getCode(), RequestResultEnum.SUCCESS.getMsg(), data);
     }
 
     public static RestApiResult build(Integer code, String msg) {

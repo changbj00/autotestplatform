@@ -82,6 +82,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public RestApiResult forgetPwd(User user, String code) {
+        if (user.getEmail() == null || user.getPassword() == null ) {
+            return restApiResult.build(RequestResultEnum.user.getCode(), RequestResultEnum.user.getMsg());
+        }
         try {
             String email = user.getEmail();
             if (user != null) {
@@ -91,6 +94,7 @@ public class UserServiceImpl implements UserService {
                     if (getCode.equals(code)) {
                         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
                         userMapper.forgetPwd(user);
+                        redisKey.deleteKey(email);
                         return restApiResult.success(user);
                     }
                     return restApiResult.build(RequestResultEnum.emailcode.getCode(), RequestResultEnum.emailcode.getMsg());
@@ -98,9 +102,8 @@ public class UserServiceImpl implements UserService {
                 return restApiResult.build(RequestResultEnum.forgot.getCode(), RequestResultEnum.forgot.getMsg());
             }
         } catch (Exception e) {
-            e.printStackTrace();
             log.error(e.getMessage());
-            //return restApiResult.faild();
+            e.printStackTrace();
         }
         return restApiResult.faild();
     }

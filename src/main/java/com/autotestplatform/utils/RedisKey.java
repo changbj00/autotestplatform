@@ -11,12 +11,11 @@ public class RedisKey {
     @Autowired
     RedisTemplate redisTemplate;
     public String getKey(String key){
-
         ValueOperations operations = redisTemplate.opsForValue();
         boolean haskey = redisTemplate.hasKey(key);
         if (haskey){
-            String value= (String) operations.get(key);
-            return value;
+            Object value= operations.get(key);
+            return value.toString();
         }else {
             return "请重新获取";
         }
@@ -25,9 +24,9 @@ public class RedisKey {
         ValueOperations operations=redisTemplate.opsForValue();
         operations.set(key, value, 1, TimeUnit.MINUTES);
     }
-
-    public static void main(String[] args) {
-        RedisKey redisKey=new RedisKey();
-        System.out.println(redisKey.getKey("1127701980@qq.com"));
+    public void deleteKey(String key){
+//        ValueOperations operations=redisTemplate.opsForValue();
+        redisTemplate.delete(key);
     }
+
 }
