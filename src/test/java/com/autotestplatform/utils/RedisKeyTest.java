@@ -19,6 +19,6 @@ class RedisKeyTest {
 
     @Test
     void getKey() {
-        redisKey.deleteKey("1127701980@qq.com");
+        System.out.println(redisKey.setKey("message:1127701980@qq.com",111));
     }
 }

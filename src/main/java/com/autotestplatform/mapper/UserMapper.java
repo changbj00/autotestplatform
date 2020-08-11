@@ -16,5 +16,5 @@ public interface UserMapper {
 
     void forgetPwd(User user);
 
-    void deleteUser(String email);
+    void deleteUser(@Param("email") String email);
 }

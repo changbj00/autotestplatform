@@ -20,7 +20,9 @@ public enum  RequestResultEnum {
     register(1002,"用户已注册"),
     user(1003,"请检查用户信息是否全部填写"),
     forgot(1004,"用户未注册"),
-    emailcode(1005,"验证码错误");
+    sendemail(1005,"验证码已发送，请稍后再试"),
+    emailcode(1006,"验证码错误"),
+    delete(1007,"用户不存在");
 
     private int code;
     private String msg;

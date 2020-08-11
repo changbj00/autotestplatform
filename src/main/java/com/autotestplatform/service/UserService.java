@@ -12,5 +12,5 @@ public interface UserService {
     User getUser(String email);
     RestApiResult register(User user);
     RestApiResult forgetPwd(User user,String code);
-    boolean deleteUser(String email);
+    RestApiResult deleteUser(String email);
 }

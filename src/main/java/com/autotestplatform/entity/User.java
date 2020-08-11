@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,16 +16,15 @@ public class User {
     private String id;
     @NotBlank(message = "姓名不能为空")
     private String username;
-    @NotNull(message = "密码不能为空")
     @Size(min = 6, max = 30, message = "密码长度应当在 6 ~ 30 个字符之间")
     private String password;
-    @NotNull(message = "email不能为空")
+    @Email(message = "邮箱格式不正确")
     private String email;
-    @NotNull(message = "电话不能为空")
+    @NotBlank(message = "电话不能为空")
     private String phone;
-    @NotNull(message = "部门不能为空")
+    @NotBlank(message = "部门不能为空")
     private String department;
-    @NotNull(message = "角色不能为空")
+    @NotBlank(message = "角色不能为空")
     private String role;
 
     public String getId() {
