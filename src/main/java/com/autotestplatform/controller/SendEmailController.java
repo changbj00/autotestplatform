@@ -55,7 +55,7 @@ public class SendEmailController {
             mailMessage.setSubject("--email--");
             mailMessage.setText("验证码：" + code);
             jms.send(mailMessage);
-            redisKey.setKey(emailKey, code);
+            redisKey.setKey(emailKey, code,1);
             return restApiResult.success();
         } catch (MailException e) {
             e.printStackTrace();
@@ -64,8 +64,4 @@ public class SendEmailController {
         }
     }
 
-    public static void main(String[] args) {
-        SendEmailController sendEmailController = new SendEmailController();
-        System.out.println(sendEmailController.code());
-    }
 }

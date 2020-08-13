@@ -7,12 +7,17 @@ import com.autotestplatform.utils.RestApiResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * 用户处理
+ * 登录、退出、注册、忘记密码、删除用户、token
+ */
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -31,7 +36,8 @@ public class UserController {
     @UserLoginToken
     @PostMapping(value = "/logOut")
     public RestApiResult logOut(@Valid String email) {
-        return null;
+        log.info("输入参数：{}", email);
+        return userService.logout(email);
     }
 
     @PostMapping(value = "/register")
@@ -42,9 +48,9 @@ public class UserController {
 
     @UserLoginToken
     @PostMapping(value = "/forgetUser")
-    public RestApiResult updateUser(User user, @Valid String code) {
+    public RestApiResult forgetUser(User user, @Valid String code) {
         log.info("输入参数：{}", user);
-        return userService.forgetPwd(user, code);
+        return userService.forgetUser(user, code);
     }
 
     @UserLoginToken
@@ -52,5 +58,18 @@ public class UserController {
     public RestApiResult deleteUser(@Valid String email) {
         log.info("输入参数{}", email);
         return userService.deleteUser(email);
+    }
+
+    @GetMapping(value = "/getToken")
+    public RestApiResult getToken(@Valid String email) {
+        log.info("输入参数：{}", email);
+        return userService.getToken(email);
+    }
+
+    @UserLoginToken
+    @PostMapping(value = "/getuser")
+    public RestApiResult getUser(@Valid String email){
+       RestApiResult restApiResult=new RestApiResult();
+        return restApiResult.success(userService.getUser(email));
     }
 }

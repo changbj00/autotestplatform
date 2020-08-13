@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
+
 @Slf4j
 @Component
 @Transactional(rollbackFor = RuntimeException.class)
@@ -30,24 +31,31 @@ public class RedisKey {
             return "请重新获取";
         }
     }
+
     @Async("asyncThreadPoolTaskExecutor")
-    public boolean setKey(String key, Object value) {
-        if (hasKey(key)){
+    public boolean setKey(String key, Object value, int time) {
+        if (hasKey(key)) {
             return false;
         }
         sleep();
         log.info("异步方法内部线程名称：{}", Thread.currentThread().getName());
         ValueOperations operations = redisTemplate.opsForValue();
-        operations.set(key, value, 1, TimeUnit.MINUTES);
+        operations.set(key, value, time, TimeUnit.MINUTES);
         return true;
     }
 
+    @Async("asyncThreadPoolTaskExecutor")
     public void deleteKey(String key) {
-        redisTemplate.delete(key);
+        if (hasKey(key)) {
+            sleep();
+            redisTemplate.delete(key);
+            log.info("异步方法内部线程名称：{}", Thread.currentThread().getName());
+        }
     }
+
     private void sleep() {
         try {
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -9,15 +9,21 @@ import com.autotestplatform.api.PassToken;
 import com.autotestplatform.api.UserLoginToken;
 import com.autotestplatform.entity.User;
 import com.autotestplatform.service.UserService;
+import com.autotestplatform.utils.RequestResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
+/**
+ * handler拦截器，查看请求头是否需要校验token
+ */
 public class AuthenticationInterceptor implements HandlerInterceptor {
+
     @Autowired
     private UserService userService;
 
@@ -43,30 +49,39 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 // 执行认证
                 if (token == null) {
                     //return false;
-                    throw new RuntimeException("无token，请重新登录");
+                    throw new CatchException(RequestResultEnum.notoken);
                 }
                 // 获取 token 中的 user id
                 String email;
                 try {
                     email = JWT.decode(token).getAudience().get(0);
                 } catch (JWTDecodeException j) {
-                    throw new RuntimeException("401");
+                    throw new CatchException(RequestResultEnum.wrongtoken);
                 }
+
                 User user = userService.getUser(email);
                 if (user == null) {
-                    throw new RuntimeException("用户不存在，请重新登录");
+                    throw new CatchException(RequestResultEnum.wrongtoken);
                 }
                 // 验证 token
                 JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
                 try {
                     jwtVerifier.verify(token);
                 } catch (JWTVerificationException e) {
-                    throw new RuntimeException("401");
+                    throw new CatchException(RequestResultEnum.pasttoken);
                 }
                 return true;
             }
         }
         return true;
+    }
+    @Override
+    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
+
+    }
+    @Override
+    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
+
     }
 }
 

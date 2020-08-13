@@ -2,6 +2,10 @@ package com.autotestplatform.utils;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * 统一返回响应数据：code+msg+data
+ * @param <T>
+ */
 @Component
 public class RestApiResult<T> {
     //响应码
@@ -13,6 +17,9 @@ public class RestApiResult<T> {
 
     public static RestApiResult faild() {
         return new RestApiResult(RequestResultEnum.FAILD.getCode(), RequestResultEnum.FAILD.getMsg(), null);
+    }
+    public  RestApiResult faild(T data) {
+        return new RestApiResult(RequestResultEnum.FAILD.getCode(), RequestResultEnum.FAILD.getMsg(), data);
     }
 
     public static RestApiResult success() {

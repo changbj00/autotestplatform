@@ -21,7 +21,8 @@ class UserControllerTest {
         User user=new User();
         user.setEmail("123@11.com");
         user.setPassword("111");
-        RestApiResult apiResult=userController.login("123@11.com","");
+        //RestApiResult apiResult=userController.login("1127701980@qq.com","123456");
+        RestApiResult apiResult=userController.logOut("1127701980@qq.com");
         System.out.println(apiResult.getMsg());
     }
 
