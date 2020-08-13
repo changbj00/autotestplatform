@@ -1,5 +1,6 @@
 package com.autotestplatform.utils;
 
+import com.autotestplatform.hander.CatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -8,7 +9,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -16,36 +16,48 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.Random;
+
+/**
+ * 发送邮件工具类
+ */
 @Component
-public class SendEmail {
+public class SendEmailUtil {
     @Autowired
     private JavaMailSender jms;
     @Value("${spring.mail.username}")
     private String from;
     @Autowired
     TemplateEngine templateEngine;
-    public String code(){
+    @Autowired
+    private RedisUtil redisUtil;
+    //生成六位随机数
+    public int code(){
         Random random = new Random();
         String result="";
         for (int i=0;i<6;i++)
         {
             result+=random.nextInt(10);
         }
-        return result;
+        return Integer.parseInt(result);
     }
+    //发送验证码
     public String sendSimpleEmail(String email) {
+        String emailKey="message:"+email;
+        if (redisUtil.hasKey(emailKey)) {
+            return RequestResultEnum.sendemail.getMsg();
+        }
         try {
+            int code = code();
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setFrom(from);
             mailMessage.setTo(email);
             mailMessage.setSubject("--email--");
-            mailMessage.setText("验证码：");
-            mailMessage.setText(code());
+            mailMessage.setText("验证码：" + code);
             jms.send(mailMessage);
+            redisUtil.setKey(emailKey, code,1);
             return "发送成功";
         } catch (MailException e) {
-            e.printStackTrace();
-            return e.getMessage();
+            throw new CatchException(RequestResultEnum.SERVER_BUSY);
         }
     }
 

@@ -10,10 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Redis工具类
+ * 获取、设置key值
+ */
 @Slf4j
 @Component
 @Transactional(rollbackFor = RuntimeException.class)
-public class RedisKey {
+public class RedisUtil {
     @Autowired
     RedisTemplate redisTemplate;
 
@@ -55,7 +59,7 @@ public class RedisKey {
 
     private void sleep() {
         try {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

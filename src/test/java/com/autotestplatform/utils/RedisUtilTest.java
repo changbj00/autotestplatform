@@ -7,18 +7,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
-class RedisKeyTest {
+class RedisUtilTest {
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
-    private RedisKey redisKey;
+    private RedisUtil redisUtil;
 
     @Test
     void getKey() {
-        System.out.println(redisKey.setKey("message:1127701980@qq.com",111,1));
+        System.out.println(redisUtil.setKey("message:1127701980@qq.com",111,1));
     }
 }

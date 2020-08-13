@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.autotestplatform.entity.User;
 import com.autotestplatform.mapper.UserMapper;
 import com.autotestplatform.service.UserService;
-import com.autotestplatform.utils.RedisKey;
+import com.autotestplatform.utils.RedisUtil;
 import com.autotestplatform.utils.RequestResultEnum;
 import com.autotestplatform.utils.RestApiResult;
 import com.autotestplatform.utils.TokenUtil;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RestApiResult restApiResult;
     @Autowired
-    private RedisKey redisKey;
+    private RedisUtil redisUtil;
     @Autowired
     private TokenUtil tokenUtil;
 
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
                 log.info("user{}", user);
                 String tokenKey = "token:" + user.getEmail();
                 String token = tokenUtil.getToken(user);
-                redisKey.setKey(tokenKey, token, 60);
+                redisUtil.setKey(tokenKey, token, 60);
                 object.put("token", token);
                 object.put("user", user);
                 return restApiResult.success(object);
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
                 userMapper.register(user);
                 String tokenKey = "token:" + user.getEmail();
                 String token = tokenUtil.getToken(user);
-                redisKey.setKey(tokenKey, token, 60);
+                redisUtil.setKey(tokenKey, token, 60);
                 object.put("token", token);
                 object.put("user", user);
                 return restApiResult.success(object);
@@ -105,13 +105,13 @@ public class UserServiceImpl implements UserService {
                 if (existUser != null) {
                     String emailKey = "message:" + email;
                     String tokenKey = "token:" + email;
-                    String getCode = redisKey.getKey(emailKey);
+                    String getCode = redisUtil.getKey(emailKey);
                     if (getCode.equals(code)) {
                         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
                         userMapper.forgetPwd(user);
                         object.put("user", user);
-                        redisKey.deleteKey(emailKey);
-                        redisKey.deleteKey(tokenKey);
+                        redisUtil.deleteKey(emailKey);
+                        redisUtil.deleteKey(tokenKey);
                         return restApiResult.success(object);
                     }
                     return restApiResult.build(RequestResultEnum.emailcode.getCode(), RequestResultEnum.emailcode.getMsg());
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
             if (existUser != null) {
                 String tokenKey = "token:" + email;
                 userMapper.deleteUser(email);
-                redisKey.deleteKey(tokenKey);
+                redisUtil.deleteKey(tokenKey);
                 return restApiResult.success();
             } else {
                 return restApiResult.build(RequestResultEnum.delete.getCode(), RequestResultEnum.delete.getMsg());
@@ -147,8 +147,8 @@ public class UserServiceImpl implements UserService {
         String tokenKey = "token:" + email;
         JSONObject object = new JSONObject();
         if (email != null) {
-            if (redisKey.hasKey(tokenKey)) {
-                object.put("token", redisKey.getKey(tokenKey));
+            if (redisUtil.hasKey(tokenKey)) {
+                object.put("token", redisUtil.getKey(tokenKey));
                 return restApiResult.success(object);
             } else {
                 User user = getUser(email);
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
     public RestApiResult logout(String email) {
         String tokenKey = "token:" + email;
         if (email != null) {
-            redisKey.deleteKey(tokenKey);
+            redisUtil.deleteKey(tokenKey);
             return restApiResult.success();
         }
         return restApiResult.faild();

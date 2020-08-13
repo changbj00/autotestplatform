@@ -8,7 +8,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+/**
+ * 用户实体
+ * */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)

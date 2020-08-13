@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+/**
+ * 生成token
+ */
 @Component
 public class TokenUtil {
     public String getToken(User user){

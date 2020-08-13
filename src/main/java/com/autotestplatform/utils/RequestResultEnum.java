@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 /**
  * 状态码
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public enum  RequestResultEnum {
     SUCCESS(10000, "处理成功"),
     FAILD(99999, "处理失败"),
@@ -19,7 +19,6 @@ public enum  RequestResultEnum {
     ILLEGAL_ACCESS(20001, "非法访问"),
     PARAMETER_IS_NULL(20002, "参数为空"),
     PARAMETER_IS_ERROR(20003, "参数格式不正确"),
-    PARAMETER_UID_ERROE(20004, "uid为空或格式不对"),
 
     //用户业务类返回码
     login(1001, "用户名或密码错误"),
