@@ -37,24 +37,22 @@ public class UserServiceImpl implements UserService {
             password = DigestUtils.md5DigestAsHex(password.getBytes());
             User user = userMapper.login(email, password);
             if (user == null) {
-                log.warn("用户不存在{}", email);
+                log.warn("用户名或密码错误:{},{}", email, password);
                 return restApiResult.build(RequestResultEnum.login.getCode(), RequestResultEnum.login.getMsg());
-//                restApiResult.setCode(RequestResultEnum.login.getCode());
-//                restApiResult.setMsg(RequestResultEnum.login.getMsg());
-//                restApiResult.setData(null);
             } else {
                 log.info("user{}", user);
                 String tokenKey = "token:" + user.getEmail();
-                String token = tokenUtil.getToken(user);
-                redisUtil.setKey(tokenKey, token, 60);
+                String token;
+                if (redisUtil.hasKey(tokenKey)) {
+                    token = redisUtil.getKey(tokenKey);
+                } else {
+                    token = tokenUtil.getToken(user);
+                    redisUtil.setKey(tokenKey, token, 60);
+                }
                 object.put("token", token);
                 object.put("user", user);
                 return restApiResult.success(object);
-//                restApiResult.setCode(RequestResultEnum.SUCCESS.getCode());
-//                restApiResult.setMsg(RequestResultEnum.SUCCESS.getMsg());
-//                restApiResult.setData(user);
             }
-            //return restApiResult;
         }
         return restApiResult.faild();
     }
