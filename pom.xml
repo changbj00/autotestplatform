@@ -11,9 +11,8 @@
     <groupId>springboot-autotestplatform</groupId>
     <artifactId>autotestplatform</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>autotestplatform</name>
-    <description>Demo project for Spring Boot</description>
-
+    <name>atp</name>
+    <packaging>jar</packaging>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -23,6 +22,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -38,9 +38,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--打包时排除tomcat-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -74,7 +84,7 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
+            <version>8.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -118,9 +128,17 @@
             <artifactId>java-jwt</artifactId>
             <version>3.4.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
+        <!--生成war包的名称-->
+        <finalName>atp</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

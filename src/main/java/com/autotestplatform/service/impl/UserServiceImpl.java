@@ -1,6 +1,8 @@
 package com.autotestplatform.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.autotestplatform.api.DataSourceSign;
+import com.autotestplatform.entity.ContextConst;
 import com.autotestplatform.entity.User;
 import com.autotestplatform.mapper.UserMapper;
 import com.autotestplatform.service.UserService;
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TokenUtil tokenUtil;
 
+    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
     @Override
     public RestApiResult login(String email, String password) {
         JSONObject object = new JSONObject();
@@ -151,7 +154,10 @@ public class UserServiceImpl implements UserService {
             } else {
                 User user = getUser(email);
                 if (user != null) {
-                    object.put("token", tokenUtil.getToken(user));
+                    String token = tokenUtil.getToken(user);
+                    log.info("获取token{}", token);
+                    redisUtil.setKey(tokenKey, token, 60);
+                    object.put("token", token);
                     return restApiResult.success(object);
                 }
             }

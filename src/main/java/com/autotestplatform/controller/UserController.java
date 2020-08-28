@@ -22,7 +22,8 @@ import javax.validation.Valid;
 public class UserController {
     @Autowired
     private UserService userService;
-@CrossOrigin
+
+    @CrossOrigin
     @PostMapping(value = "/login")
     public RestApiResult login(@Valid String email, @Valid String password) {
 
@@ -65,8 +66,8 @@ public class UserController {
 
     @UserLoginToken
     @PostMapping(value = "/getuser")
-    public RestApiResult getUser(@Valid String email){
-       RestApiResult restApiResult=new RestApiResult();
+    public RestApiResult getUser(@Valid String email) {
+        RestApiResult restApiResult = new RestApiResult();
         return restApiResult.success(userService.getUser(email));
     }
 }

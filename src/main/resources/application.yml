@@ -2,10 +2,18 @@
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/test?characterEncoding=UTF-8
-    username: root
-    password: 11111111
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    primary:
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:mysql://112.126.64.183:3306/test?characterEncoding=UTF-8
+      username: root
+      password: 12345
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    local:
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8
+      username: root
+      password: 11111111
+      driver-class-name: com.mysql.cj.jdbc.Driver
   mail:
     host: smtp.163.com
     username: 15811419781@163.com
@@ -21,7 +29,7 @@ spring:
       # Redis数据库索引（默认为0）
       database: 0
       # Redis服务器地址
-      host: 127.0.0.1
+      host: 112.126.64.183
       # Redis服务器连接端口
       port: 6379
       pool:
@@ -46,4 +54,4 @@ logging:
     com:
       autotestplatform: debug
 server:
-  port: 8091
+  port: 8088
