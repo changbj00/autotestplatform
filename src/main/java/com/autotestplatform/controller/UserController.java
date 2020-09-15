@@ -6,10 +6,10 @@ import com.autotestplatform.service.UserService;
 import com.autotestplatform.utils.RestApiResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 
 /**
  * 用户处理
@@ -18,56 +18,54 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping("/user")
-@Validated
 public class UserController {
     @Autowired
     private UserService userService;
 
     @CrossOrigin
     @PostMapping(value = "/login")
-    public RestApiResult login(@Valid String email, @Valid String password) {
+    public RestApiResult login(@Valid@Email String username, @Valid String password) {
 
-        log.info("输入参数email:{},pwd:{}", email, password);
-        return userService.login(email, password);
+        log.info("输入参数email:{},pwd:{}", username, password);
+        return userService.login(username, password);
     }
 
     @UserLoginToken
     @PostMapping(value = "/logOut")
-    public RestApiResult logOut(@Valid String email) {
-        log.info("输入参数：{}", email);
-        return userService.logout(email);
+    public RestApiResult logOut(@Valid@Email String username) {
+        log.info("输入参数：{}", username);
+        return userService.logout(username);
     }
 
     @PostMapping(value = "/register")
-    public RestApiResult registerUser(@Validated User user) {
+    public RestApiResult registerUser( User user) {
         log.info("输入参数：{}", user);
         return userService.register(user);
     }
 
-    @UserLoginToken
     @PostMapping(value = "/forgetUser")
-    public RestApiResult forgetUser(User user, @Valid String code) {
+    public RestApiResult forgetUser( User user, @Valid String code) {
         log.info("输入参数：{}", user);
         return userService.forgetUser(user, code);
     }
 
     @UserLoginToken
     @PostMapping(value = "/deleteUser")
-    public RestApiResult deleteUser(@Valid String email) {
-        log.info("输入参数{}", email);
-        return userService.deleteUser(email);
+    public RestApiResult deleteUser(@Valid@Email String username) {
+        log.info("输入参数{}", username);
+        return userService.deleteUser(username);
     }
 
     @GetMapping(value = "/getToken")
-    public RestApiResult getToken(@Valid String email) {
-        log.info("输入参数：{}", email);
-        return userService.getToken(email);
+    public RestApiResult getToken(@Valid@Email String username) {
+        log.info("输入参数：{}", username);
+        return userService.getToken(username);
     }
 
     @UserLoginToken
     @PostMapping(value = "/getuser")
-    public RestApiResult getUser(@Valid String email) {
+    public RestApiResult getUser(@Valid@Email String username) {
         RestApiResult restApiResult = new RestApiResult();
-        return restApiResult.success(userService.getUser(email));
+        return restApiResult.success(userService.getUser(username));
     }
 }

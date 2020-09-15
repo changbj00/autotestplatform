@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 
 /**
  * 异常处理全局匹配类
@@ -29,6 +30,14 @@ public class ExceptionHandler {
         log.error("exception error:{}",ex);
         response = new RestApiResult(RequestResultEnum.SERVER_EXP.getCode(),
                 RequestResultEnum.SERVER_EXP.getMsg(),null);
+        return response;
+    }
+    @org.springframework.web.bind.annotation.ExceptionHandler(ConstraintViolationException.class)
+    public RestApiResult handleException(HttpServletRequest request, ConstraintViolationException cve) {
+        RestApiResult response;
+        log.error("exception error:{}",cve);
+        response = new RestApiResult(RequestResultEnum.PARAMETER_IS_ERROR.getCode(),
+                cve.getMessage().split(":")[1],null);
         return response;
     }
 

@@ -1,10 +1,10 @@
 package com.autotestplatform.mapper;
 
 import com.autotestplatform.entity.User;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-
 @Mapper
 @Repository
 public interface UserMapper {

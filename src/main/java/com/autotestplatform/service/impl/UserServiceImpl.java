@@ -24,15 +24,15 @@ import org.springframework.util.DigestUtils;
 @Transactional(rollbackFor = RuntimeException.class)
 public class UserServiceImpl implements UserService {
     @Autowired
-    private UserMapper userMapper;
-    @Autowired
     private RestApiResult restApiResult;
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
     private TokenUtil tokenUtil;
+    @Autowired
+    private UserMapper userMapper;
 
-    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
+    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
     @Override
     public RestApiResult login(String email, String password) {
         JSONObject object = new JSONObject();
@@ -44,28 +44,32 @@ public class UserServiceImpl implements UserService {
                 return restApiResult.build(RequestResultEnum.login.getCode(), RequestResultEnum.login.getMsg());
             } else {
                 log.info("user{}", user);
-                String tokenKey = "token:" + user.getEmail();
-                String token;
+                String tokenKey = "usertoken:" + user.getEmail();
+                String usertoken;
                 if (redisUtil.hasKey(tokenKey)) {
-                    token = redisUtil.getKey(tokenKey);
+                    usertoken = redisUtil.getKey(tokenKey);
                 } else {
-                    token = tokenUtil.getToken(user);
-                    redisUtil.setKey(tokenKey, token, 60);
+                    usertoken = tokenUtil.getToken(user);
+                    redisUtil.setKey(tokenKey, usertoken, 60);
                 }
-                object.put("token", token);
+                object.put("usertoken", usertoken);
                 object.put("user", user);
                 return restApiResult.success(object);
             }
         }
         return restApiResult.faild();
     }
-
+    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
     @Override
     public User getUser(String email) {
         User user = userMapper.getUser(email);
-        return user;
+        if (user!=null)
+            return user;
+        else
+            return null;
+            //throw new CatchException(RequestResultEnum.forgot);
     }
-
+    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
     @Override
     public RestApiResult register(User user) {
         JSONObject object = new JSONObject();
@@ -82,17 +86,17 @@ public class UserServiceImpl implements UserService {
                 user.setId(null);
                 user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
                 userMapper.register(user);
-                String tokenKey = "token:" + user.getEmail();
-                String token = tokenUtil.getToken(user);
-                redisUtil.setKey(tokenKey, token, 60);
-                object.put("token", token);
+                String tokenKey = "usertoken:" + user.getEmail();
+                String usertoken = tokenUtil.getToken(user);
+                redisUtil.setKey(tokenKey, usertoken, 60);
+                object.put("token", usertoken);
                 object.put("user", user);
                 return restApiResult.success(object);
             }
         }
         return restApiResult.faild();
     }
-
+    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
     @Override
     public RestApiResult forgetUser(User user, String code) {
         JSONObject object = new JSONObject();
@@ -105,7 +109,7 @@ public class UserServiceImpl implements UserService {
                 User existUser = getUser(email);
                 if (existUser != null) {
                     String emailKey = "message:" + email;
-                    String tokenKey = "token:" + email;
+                    String tokenKey = "usertoken:" + email;
                     String getCode = redisUtil.getKey(emailKey);
                     if (getCode.equals(code)) {
                         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
@@ -125,13 +129,13 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-
+    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
     @Override
     public RestApiResult deleteUser(String email) {
         if (email != null) {
             User existUser = getUser(email);
             if (existUser != null) {
-                String tokenKey = "token:" + email;
+                String tokenKey = "usertoken:" + email;
                 userMapper.deleteUser(email);
                 redisUtil.deleteKey(tokenKey);
                 return restApiResult.success();
@@ -142,32 +146,32 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-
+    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
     @Override
     public RestApiResult getToken(String email) {
-        String tokenKey = "token:" + email;
+        String tokenKey = "usertoken:" + email;
         JSONObject object = new JSONObject();
         if (email != null) {
             if (redisUtil.hasKey(tokenKey)) {
-                object.put("token", redisUtil.getKey(tokenKey));
+                object.put("usertoken", redisUtil.getKey(tokenKey));
                 return restApiResult.success(object);
             } else {
                 User user = getUser(email);
                 if (user != null) {
-                    String token = tokenUtil.getToken(user);
-                    log.info("获取token{}", token);
-                    redisUtil.setKey(tokenKey, token, 60);
-                    object.put("token", token);
+                    String usertoken = tokenUtil.getToken(user);
+                    log.info("获取token{}", usertoken);
+                    redisUtil.setKey(tokenKey, usertoken, 60);
+                    object.put("usertoken", usertoken);
                     return restApiResult.success(object);
                 }
             }
         }
         return restApiResult.faild();
     }
-
+    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
     @Override
     public RestApiResult logout(String email) {
-        String tokenKey = "token:" + email;
+        String tokenKey = "usertoken:" + email;
         if (email != null) {
             redisUtil.deleteKey(tokenKey);
             return restApiResult.success();

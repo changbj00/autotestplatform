@@ -10,9 +10,9 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
     local:
       type: com.alibaba.druid.pool.DruidDataSource
-      url: jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8
+      url: jdbc:mysql://127.0.0.1:3307/test?characterEncoding=UTF-8
       username: root
-      password: 11111111
+      password: 12345
       driver-class-name: com.mysql.cj.jdbc.Driver
   mail:
     host: smtp.163.com
@@ -29,7 +29,7 @@ spring:
       # Redis数据库索引（默认为0）
       database: 0
       # Redis服务器地址
-      host: 112.126.64.183
+      host: 127.0.0.1
       # Redis服务器连接端口
       port: 6379
       pool:
@@ -42,7 +42,7 @@ spring:
         # 连接池中的最小空闲连接
         min-idle: 0
       # 连接超时时间（毫秒）
-        timeout: 0
+        timeout: 5000
   thymeleaf:
     cache: false
 mybatis:
@@ -53,5 +53,7 @@ logging:
   level:
     com:
       autotestplatform: debug
+  file:
+    path: log/mylog.log
 server:
-  port: 8088
+  port: 8089

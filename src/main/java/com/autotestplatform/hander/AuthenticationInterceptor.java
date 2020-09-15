@@ -29,7 +29,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String token = request.getHeader("token");// 从 http 请求头中取出 token
+        String usertoken = request.getHeader("usertoken");// 从 http 请求头中取出 token
         // 如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -47,28 +47,31 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
             if (userLoginToken.required()) {
                 // 执行认证
-                if (token == null) {
+                if (usertoken == null) {
                     //return false;
-                    throw new CatchException(RequestResultEnum.notoken);
+                    throw new CatchException(RequestResultEnum.ILLEGAL_ACCESS);
                 }
                 // 获取 token 中的 user id
                 String email;
                 try {
-                    email = JWT.decode(token).getAudience().get(0);
+                    email = JWT.decode(usertoken).getAudience().get(0);
                 } catch (JWTDecodeException j) {
-                    throw new CatchException(RequestResultEnum.wrongtoken);
+                    //token无效
+                    throw new CatchException(RequestResultEnum.ILLEGAL_ACCESS);
                 }
 
                 User user = userService.getUser(email);
                 if (user == null) {
-                    throw new CatchException(RequestResultEnum.wrongtoken);
+                    //用户不存在
+                    throw new CatchException(RequestResultEnum.ILLEGAL_ACCESS);
                 }
                 // 验证 token
                 JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
                 try {
-                    jwtVerifier.verify(token);
+                    jwtVerifier.verify(usertoken);
                 } catch (JWTVerificationException e) {
-                    throw new CatchException(RequestResultEnum.pasttoken);
+                    //token过期
+                    throw new CatchException(RequestResultEnum.ILLEGAL_ACCESS);
                 }
                 return true;
             }
