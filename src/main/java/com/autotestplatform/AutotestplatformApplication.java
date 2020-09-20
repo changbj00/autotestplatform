@@ -11,7 +11,6 @@ import org.springframework.context.ApplicationContextAware;
 
 //排除DataSource自动配置类,否则会默认自动配置,不会使用我们自定义的DataSource,并且启动报错
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-@MapperScan("com.autotestplatform.*")
 public class AutotestplatformApplication implements CommandLineRunner,ApplicationContextAware {
     public static void main(String[] args) {
         SpringApplicationBuilder springApplicationBuilder=new SpringApplicationBuilder(AutotestplatformApplication.class);
