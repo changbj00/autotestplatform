@@ -2,13 +2,13 @@
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    primary:
+    master:
       type: com.alibaba.druid.pool.DruidDataSource
       url: jdbc:mysql://112.126.64.183:3306/test?characterEncoding=UTF-8
       username: root
       password: 12345
       driver-class-name: com.mysql.cj.jdbc.Driver
-    local:
+    slave:
       type: com.alibaba.druid.pool.DruidDataSource
       url: jdbc:mysql://127.0.0.1:3307/test?characterEncoding=UTF-8
       username: root

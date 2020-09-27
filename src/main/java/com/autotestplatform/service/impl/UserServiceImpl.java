@@ -1,8 +1,8 @@
 package com.autotestplatform.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.autotestplatform.api.DataSourceSign;
-import com.autotestplatform.entity.ContextConst;
+import com.autotestplatform.api.DataSource;
+import com.autotestplatform.entity.DataSourceType;
 import com.autotestplatform.entity.User;
 import com.autotestplatform.mapper.UserMapper;
 import com.autotestplatform.service.UserService;
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
+    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult login(String email, String password) {
         JSONObject object = new JSONObject();
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
+    @DataSource(DataSourceType.master)
     @Override
     public User getUser(String email) {
         User user = userMapper.getUser(email);
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
             return null;
             //throw new CatchException(RequestResultEnum.forgot);
     }
-    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
+    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult register(User user) {
         JSONObject object = new JSONObject();
@@ -89,14 +89,14 @@ public class UserServiceImpl implements UserService {
                 String tokenKey = "usertoken:" + user.getEmail();
                 String usertoken = tokenUtil.getToken(user);
                 redisUtil.setKey(tokenKey, usertoken, 60);
-                object.put("token", usertoken);
+                object.put("usertoken", usertoken);
                 object.put("user", user);
                 return restApiResult.success(object);
             }
         }
         return restApiResult.faild();
     }
-    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
+    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult forgetUser(User user, String code) {
         JSONObject object = new JSONObject();
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
+    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult deleteUser(String email) {
         if (email != null) {
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
+    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult getToken(String email) {
         String tokenKey = "usertoken:" + email;
@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-    @DataSourceSign(ContextConst.DataSourceType.LOCAL)
+    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult logout(String email) {
         String tokenKey = "usertoken:" + email;

@@ -8,9 +8,7 @@ import com.autotestplatform.utils.RestApiResult;
 import com.autotestplatform.utils.SendEmailUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Email;
@@ -20,7 +18,6 @@ import javax.validation.constraints.Email;
  */
 @Slf4j
 @RestController
-@RequestMapping("/user")
 public class SendEmailController {
     @Autowired
     private RestApiResult restApiResult;

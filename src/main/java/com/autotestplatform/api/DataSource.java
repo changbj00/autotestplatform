@@ -1,6 +1,6 @@
 package com.autotestplatform.api;
 
-import com.autotestplatform.entity.ContextConst;
+import com.autotestplatform.entity.DataSourceType;
 
 import java.lang.annotation.*;
 
@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE,ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface DataSourceSign {
-    ContextConst.DataSourceType value() default ContextConst.DataSourceType.PRIMARY;
+public @interface DataSource {
+    DataSourceType value() default DataSourceType.master;
 
 }

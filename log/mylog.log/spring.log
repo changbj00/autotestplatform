@@ -1,3 +1,3 @@
-2020-09-18 13:55:24.352 DEBUG 89680 --- [SpringContextShutdownHook] ConfigServletWebServerApplicationContext : Closing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@36b48747, started on Thu Sep 17 19:19:26 CST 2020
-2020-09-18 13:55:24.754  INFO 89680 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'asyncThreadPoolTaskExecutor'
-2020-09-18 13:55:24.769  INFO 89680 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
+2020-09-22 17:22:16.288 DEBUG 98706 --- [SpringContextShutdownHook] ConfigServletWebServerApplicationContext : Closing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@15f6ca1d, started on Sun Sep 20 16:32:16 CST 2020
+2020-09-22 17:22:16.863  INFO 98706 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'asyncThreadPoolTaskExecutor'
+2020-09-22 17:22:16.876  INFO 98706 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
