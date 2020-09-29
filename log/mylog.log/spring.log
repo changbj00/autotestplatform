@@ -1,3 +1,0 @@
-2020-09-22 17:22:16.288 DEBUG 98706 --- [SpringContextShutdownHook] ConfigServletWebServerApplicationContext : Closing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@15f6ca1d, started on Sun Sep 20 16:32:16 CST 2020
-2020-09-22 17:22:16.863  INFO 98706 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'asyncThreadPoolTaskExecutor'
-2020-09-22 17:22:16.876  INFO 98706 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed

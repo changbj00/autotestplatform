@@ -1,8 +1,6 @@
 package com.autotestplatform.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.autotestplatform.api.DataSource;
-import com.autotestplatform.entity.DataSourceType;
 import com.autotestplatform.entity.User;
 import com.autotestplatform.mapper.UserMapper;
 import com.autotestplatform.service.UserService;
@@ -10,6 +8,7 @@ import com.autotestplatform.utils.RedisUtil;
 import com.autotestplatform.utils.RequestResultEnum;
 import com.autotestplatform.utils.RestApiResult;
 import com.autotestplatform.utils.TokenUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @DataSource(DataSourceType.master)
+    @DS("slave")
     @Override
     public RestApiResult login(String email, String password) {
         JSONObject object = new JSONObject();
@@ -59,7 +58,6 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-    @DataSource(DataSourceType.master)
     @Override
     public User getUser(String email) {
         User user = userMapper.getUser(email);
@@ -69,7 +67,6 @@ public class UserServiceImpl implements UserService {
             return null;
             //throw new CatchException(RequestResultEnum.forgot);
     }
-    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult register(User user) {
         JSONObject object = new JSONObject();
@@ -96,7 +93,6 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult forgetUser(User user, String code) {
         JSONObject object = new JSONObject();
@@ -129,7 +125,6 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult deleteUser(String email) {
         if (email != null) {
@@ -146,7 +141,6 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult getToken(String email) {
         String tokenKey = "usertoken:" + email;
@@ -168,7 +162,6 @@ public class UserServiceImpl implements UserService {
         }
         return restApiResult.faild();
     }
-    @DataSource(DataSourceType.master)
     @Override
     public RestApiResult logout(String email) {
         String tokenKey = "usertoken:" + email;
