@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @DS("slave")
     @Override
     public RestApiResult login(String email, String password) {
         JSONObject object = new JSONObject();
