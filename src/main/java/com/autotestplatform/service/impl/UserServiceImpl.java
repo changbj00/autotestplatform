@@ -8,7 +8,6 @@ import com.autotestplatform.utils.RedisUtil;
 import com.autotestplatform.utils.RequestResultEnum;
 import com.autotestplatform.utils.RestApiResult;
 import com.autotestplatform.utils.TokenUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

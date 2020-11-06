@@ -18,7 +18,7 @@ public enum  RequestResultEnum {
     //安全验证类返回码
     ILLEGAL_ACCESS(20001, "非法访问"),
     PARAMETER_IS_NULL(20002, "参数为空"),
-    PARAMETER_IS_ERROR(20003, "参数格式不正确"),
+    PARAMETER_IS_ERROR(20003, "参数不正确"),
 
     //用户业务类返回码
     login(1001, "用户名或密码错误"),

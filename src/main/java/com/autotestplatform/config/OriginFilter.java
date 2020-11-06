@@ -37,6 +37,7 @@ public class OriginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         String originHeader=request.getHeader("Orion")!=null?request.getHeader("Origin")
                 .replace(" ", ""):request.getHeader("Origin");
+        log.info("header{}",originHeader);
         if (Arrays.asList(allowedOrigins).contains(originHeader)) {
             response.setHeader("Access-Control-Allow-Origin", originHeader);
             response.setHeader("Access-Control-Allow-Methods", allowedMethods);

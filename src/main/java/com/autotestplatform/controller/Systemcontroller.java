@@ -13,7 +13,7 @@ public class Systemcontroller {
     @Autowired
     private SystemService systemService;
 
-    @GetMapping("/error")
+    @GetMapping("/")
     public RestApiResult error(){
         log.error("error");
         return systemService.error();
